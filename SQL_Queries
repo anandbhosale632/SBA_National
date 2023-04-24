@@ -1,0 +1,88 @@
+To retrieve all the records from the table in a database we use:
+SELECT * FROM "SBANational_Anand";
+-------------------------------------------------------------------------------------------------
+
+1. Using Window functions, explore the top 3, 5 or 10 customers based on certain metrics
+(Eg - Find the top 5 customers with highest bank balance who have not defaulted on a loan in the last 2 years).
+This will help you understand your ideal loan applicants.
+
+----------->
+Using the window function, identify the top 5 clients who have the largest bank balances 
+and haven't missed a payment on a loan in the previous two years:
+
+SELECT *
+FROM (
+    SELECT *,
+        ROW_NUMBER() OVER (ORDER BY "BalanceGross" DESC) AS rank
+    FROM "SBANational_Anand"
+    WHERE "ChgOffDate" IS NULL
+        AND "DisbursementDate" >= CURRENT_DATE - INTERVAL '2 years'
+) AS subquery
+WHERE rank <= 5;
+---------------------------------------------------------------------------------------------------
+
+We can use the following query to determine which clients have the greatest approved loan amounts 
+and have not defaulted on a loan within the last two years:
+
+SELECT *
+FROM (
+    SELECT *,
+        ROW_NUMBER() OVER (ORDER BY "GrAppv" DESC) AS rank
+    FROM "SBANational_Anand"
+    WHERE "ChgOffDate" IS NULL
+        AND "DisbursementDate" >= CURRENT_DATE - INTERVAL '2 years'
+) AS subquery
+WHERE rank <= 5;
+-----------------------------------------------------------------------------------------------------
+
+We can use the following query to determine the top 5 clients who have produced the most employment 
+and haven't missed a loan payment in the last two years:
+
+SELECT *
+FROM (
+    SELECT *,
+        ROW_NUMBER() OVER (ORDER BY "CreateJob" DESC) AS rank
+    FROM "SBANational_Anand"
+    WHERE "ChgOffDate" IS NULL
+        AND "DisbursementDate" >= CURRENT_DATE - INTERVAL '2 years'
+) AS subquery
+WHERE rank <= 5;
+-------------------------------------------------------------------------------------------------------
+
+Top 10 customers with the highest approved loan amount:
+
+SELECT *
+FROM (
+    SELECT *,
+        ROW_NUMBER() OVER (ORDER BY "GrAppv" DESC) AS rank
+    FROM "SBANational_Anand"
+) AS subquery
+WHERE rank <= 10;
+-------------------------------------------------------------------------------------------------------
+
+Top 5 customers with the highest number of retained jobs:
+
+SELECT *
+FROM (
+    SELECT *,
+        ROW_NUMBER() OVER (ORDER BY "RetainedJob" DESC) AS rank
+    FROM "SBANational_Anand"
+) AS subquery
+WHERE rank <= 5;
+--------------------------------------------------------------------------------------------------------
+
+Top 3 customers with the highest number of jobs created in the last 6 months:
+
+SELECT *
+FROM (
+    SELECT *,
+        ROW_NUMBER() OVER (ORDER BY "CreateJob" DESC) AS rank
+    FROM "SBANational_Anand"
+    WHERE "DisbursementDate" >= CURRENT_DATE - INTERVAL '6 months'
+) AS subquery
+WHERE rank <= 3;
+----------------------------------------------------------------------------------------------------------
+
+2. Write out your final query that creates a column in the table (Refer to the commands in C3) 
+which says whether a customer is eligible for a loan or not based on the criterion you set in the previous component.
+
