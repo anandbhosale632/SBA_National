@@ -83,6 +83,3 @@ FROM (
 WHERE rank <= 3;
 ----------------------------------------------------------------------------------------------------------
 
-2. Write out your final query that creates a column in the table (Refer to the commands in C3) 
-which says whether a customer is eligible for a loan or not based on the criterion you set in the previous component.
-
